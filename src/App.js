@@ -108,6 +108,8 @@ const App = () => {
   );
   const showBlogsRef = useRef();
 
+  const sortedBlogs = blogs.slice().sort((a, b) => b.likes - a.likes);
+
   const showBlogs = () => (
     <>
       <h1>Blogs</h1>
@@ -116,7 +118,7 @@ const App = () => {
         {user.name} logged in <button onClick={handleLogout}>logout</button>
       </p>
       <div>
-        {blogs.map((blog) => (
+        {sortedBlogs.map((blog) => (
           <Blog key={blog.id} blog={blog} setBlogs={setBlogs} blogs={blogs} />
         ))}
       </div>
