@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Blog from "./components/Blog";
 import Togglable from "./components/Togglable";
+import NewBlog from "./components/NewBlog";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 
@@ -18,9 +19,6 @@ const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
-  const [url, setUrl] = useState("");
   const [notification, setNotification] = useState(null);
 
   useEffect(() => {
@@ -68,16 +66,12 @@ const App = () => {
     }, 5000);
   };
 
-  const createNewBlog = async (e) => {
-    e.preventDefault();
+  const createNewBlog = async (blogObject) => {
     //post with data
     try {
       blogService.setToken(user.token);
-      const blog = await blogService.create({ title, author, url });
+      const blog = await blogService.create(blogObject);
       setBlogs(blogs.concat(blog));
-      setTitle("");
-      setAuthor("");
-      setUrl("");
       showNotification(`A new blog ${blog.title} by ${blog.author} created!`);
       showBlogsRef.current.toggleVisibility();
     } catch (exception) {
@@ -126,41 +120,10 @@ const App = () => {
           <Blog key={blog.id} blog={blog} />
         ))}
       </div>
-      {/* -------- */}
+
       <Togglable buttonLabel="create new blog" ref={showBlogsRef}>
-        <h3>create new blog</h3>
-        <form onSubmit={createNewBlog}>
-          <div>
-            title:{" "}
-            <input
-              type="text"
-              name="Title"
-              value={title}
-              onChange={({ target }) => setTitle(target.value)}
-            />
-          </div>
-          <div>
-            author:{" "}
-            <input
-              type="text"
-              name="Author"
-              value={author}
-              onChange={({ target }) => setAuthor(target.value)}
-            />
-          </div>
-          <div>
-            url:{" "}
-            <input
-              type="text"
-              name="Url"
-              value={url}
-              onChange={({ target }) => setUrl(target.value)}
-            />
-          </div>
-          <button type="submit">create</button>
-        </form>
+        <NewBlog createNewBlog={createNewBlog} />
       </Togglable>
-      {/* -------- */}
     </>
   );
 
