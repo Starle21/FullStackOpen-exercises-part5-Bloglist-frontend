@@ -10,4 +10,6 @@ const login = async (credentials) => {
   return response.data;
 };
 
-export default { login };
+const toExport = { login };
+
+export default toExport;

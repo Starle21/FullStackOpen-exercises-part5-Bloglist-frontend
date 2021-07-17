@@ -21,4 +21,6 @@ const create = async (newBlog) => {
   return response.data;
 };
 
-export default { getAll, setToken, create };
+const toExport = { getAll, setToken, create };
+
+export default toExport;

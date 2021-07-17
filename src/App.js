@@ -3,6 +3,15 @@ import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 
+const Notification = ({ notification }) => {
+  if (notification === null) return null;
+  return (
+    <div className={notification.type}>
+      <p>{notification.message}</p>
+    </div>
+  );
+};
+
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState("");
@@ -11,6 +20,7 @@ const App = () => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
+  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -37,8 +47,9 @@ const App = () => {
       setUser(user);
       setUsername("");
       setPassword("");
+      showNotification(`Logged in ${user.name}!`);
     } catch (exception) {
-      console.error(exception);
+      showNotification(exception.response.data.error, "errorMessage");
     }
   };
 
@@ -46,11 +57,36 @@ const App = () => {
     //
     setUser(null);
     window.localStorage.removeItem("loggedInUser");
+    showNotification(`Stop by soon!`);
+  };
+
+  const showNotification = (message, type = "successMessage") => {
+    setNotification({ message, type });
+    setTimeout(() => {
+      setNotification("");
+    }, 5000);
+  };
+
+  const createNewBlog = async (e) => {
+    e.preventDefault();
+    //post with data
+    try {
+      blogService.setToken(user.token);
+      const blog = await blogService.create({ title, author, url });
+      setBlogs(blogs.concat(blog));
+      setTitle("");
+      setAuthor("");
+      setUrl("");
+      showNotification(`A new blog ${blog.title} by ${blog.author} created!`);
+    } catch (exception) {
+      showNotification(exception.response.data.error, "errorMessage");
+    }
   };
 
   const loginForm = () => (
     <>
       <h2>login</h2>
+      <Notification notification={notification} />
       <form onSubmit={handleLogin}>
         <div>
           username{" "}
@@ -75,24 +111,10 @@ const App = () => {
     </>
   );
 
-  const createNewBlog = async (e) => {
-    e.preventDefault();
-    //post with data
-    try {
-      blogService.setToken(user.token);
-      const blog = await blogService.create({ title, author, url });
-      setBlogs(blogs.concat(blog));
-      setTitle("");
-      setAuthor("");
-      setUrl("");
-    } catch (exception) {
-      console.log(exception.response.data.error);
-    }
-  };
-
   const showBlogs = () => (
     <>
       <h1>Blogs</h1>
+      <Notification notification={notification} />
       <p>
         {user.name} logged in <button onClick={handleLogout}>logout</button>
       </p>
