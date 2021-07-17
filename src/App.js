@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Blog from "./components/Blog";
+import Togglable from "./components/Togglable";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 
@@ -78,6 +79,7 @@ const App = () => {
       setAuthor("");
       setUrl("");
       showNotification(`A new blog ${blog.title} by ${blog.author} created!`);
+      showBlogsRef.current.toggleVisibility();
     } catch (exception) {
       showNotification(exception.response.data.error, "errorMessage");
     }
@@ -110,6 +112,7 @@ const App = () => {
       </form>
     </>
   );
+  const showBlogsRef = useRef();
 
   const showBlogs = () => (
     <>
@@ -123,37 +126,41 @@ const App = () => {
           <Blog key={blog.id} blog={blog} />
         ))}
       </div>
-      <h3>create new blog</h3>
-      <form onSubmit={createNewBlog}>
-        <div>
-          title:{" "}
-          <input
-            type="text"
-            name="Title"
-            value={title}
-            onChange={({ target }) => setTitle(target.value)}
-          />
-        </div>
-        <div>
-          author:{" "}
-          <input
-            type="text"
-            name="Author"
-            value={author}
-            onChange={({ target }) => setAuthor(target.value)}
-          />
-        </div>
-        <div>
-          url:{" "}
-          <input
-            type="text"
-            name="Url"
-            value={url}
-            onChange={({ target }) => setUrl(target.value)}
-          />
-        </div>
-        <button type="submit">create</button>
-      </form>
+      {/* -------- */}
+      <Togglable buttonLabel="create new blog" ref={showBlogsRef}>
+        <h3>create new blog</h3>
+        <form onSubmit={createNewBlog}>
+          <div>
+            title:{" "}
+            <input
+              type="text"
+              name="Title"
+              value={title}
+              onChange={({ target }) => setTitle(target.value)}
+            />
+          </div>
+          <div>
+            author:{" "}
+            <input
+              type="text"
+              name="Author"
+              value={author}
+              onChange={({ target }) => setAuthor(target.value)}
+            />
+          </div>
+          <div>
+            url:{" "}
+            <input
+              type="text"
+              name="Url"
+              value={url}
+              onChange={({ target }) => setUrl(target.value)}
+            />
+          </div>
+          <button type="submit">create</button>
+        </form>
+      </Togglable>
+      {/* -------- */}
     </>
   );
 
