@@ -71,7 +71,11 @@ const App = () => {
     try {
       blogService.setToken(user.token);
       const blog = await blogService.create(blogObject);
-      setBlogs(blogs.concat(blog));
+      const blogWithUser = {
+        ...blog,
+        user: { name: user.name, username: user.username, id: blog.user },
+      };
+      setBlogs(blogs.concat(blogWithUser));
       showNotification(`A new blog ${blog.title} by ${blog.author} created!`);
       showBlogsRef.current.toggleVisibility();
     } catch (exception) {
@@ -119,10 +123,17 @@ const App = () => {
       </p>
       <div>
         {sortedBlogs.map((blog) => (
-          <Blog key={blog.id} blog={blog} setBlogs={setBlogs} blogs={blogs} />
+          <Blog
+            key={blog.id}
+            blog={blog}
+            setBlogs={setBlogs}
+            blogs={blogs}
+            showNotification={showNotification}
+            user={user}
+          />
         ))}
       </div>
-
+      <br />
       <Togglable buttonLabel="create new blog" ref={showBlogsRef}>
         <NewBlog createNewBlog={createNewBlog} />
       </Togglable>
