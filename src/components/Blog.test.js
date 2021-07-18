@@ -50,7 +50,7 @@ describe("<Blog/>", () => {
   test("when button view is clicked, likes and url are displayed", () => {
     const button = component.getByText("view");
     fireEvent.click(button);
-
+    component.debug();
     const div = component.container.querySelector(".details");
     expect(div).not.toHaveStyle("display: none");
   });
