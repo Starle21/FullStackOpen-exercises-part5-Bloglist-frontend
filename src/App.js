@@ -56,7 +56,7 @@ const App = () => {
     //
     setUser(null);
     window.localStorage.removeItem("loggedInUser");
-    showNotification(`Stop by soon!`);
+    showNotification("Stop by soon!");
   };
 
   const showNotification = (message, type = "successMessage") => {
