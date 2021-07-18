@@ -37,7 +37,7 @@ const Blog = ({ blog, setBlogs, blogs, showNotification, user }) => {
       {blog.title} {blog.author}{" "}
       <button onClick={toggleVisibility}>{visible ? "hide" : "view"}</button>
       {/*  when details visible*/}
-      <div style={hiddenDefault}>
+      <div style={hiddenDefault} className="details">
         {blog.url}
         <br />
         likes {blog.likes} <button onClick={handleIncreaseLikes}>like</button>
