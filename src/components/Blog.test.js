@@ -6,6 +6,7 @@ import Blog from "./Blog";
 
 describe("<Blog/>", () => {
   let component;
+  const giveLike = jest.fn();
 
   beforeEach(() => {
     const blog = {
@@ -23,17 +24,14 @@ describe("<Blog/>", () => {
       username: "smb",
     };
 
-    const showNotification = jest.fn();
-    const setBlogs = jest.fn();
-    const blogs = [];
+    const deletePost = jest.fn();
 
     component = render(
       <Blog
         blog={blog}
         user={user}
-        showNotification={showNotification}
-        setBlogs={setBlogs}
-        blogs={blogs}
+        giveLike={giveLike}
+        deletePost={deletePost}
       />
     );
   });
@@ -50,8 +48,17 @@ describe("<Blog/>", () => {
   test("when button view is clicked, likes and url are displayed", () => {
     const button = component.getByText("view");
     fireEvent.click(button);
-    component.debug();
+
     const div = component.container.querySelector(".details");
     expect(div).not.toHaveStyle("display: none");
   });
+
+  test("when likes button clicked twice, setBlogs are called twice", () => {
+    const like = component.getByText("like");
+
+    fireEvent.click(like);
+    fireEvent.click(like);
+
+    expect(giveLike).toHaveBeenCalledTimes(2);
+  }, 100000);
 });

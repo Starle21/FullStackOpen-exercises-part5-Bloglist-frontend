@@ -114,6 +114,25 @@ const App = () => {
 
   const sortedBlogs = blogs.slice().sort((a, b) => b.likes - a.likes);
 
+  const handleGiveLike = async (blog) => {
+    const copyBlog = { ...blog, likes: blog.likes + 1 };
+    const blogUpdated = await blogService.update(blog.id, copyBlog);
+    setBlogs(blogs.map((e) => (e.id !== blogUpdated.id ? e : blogUpdated)));
+  };
+
+  const handleDeletePost = async (blog) => {
+    try {
+      const confirmed = window.confirm(`Are you sure to delete ${blog.title}?`);
+      if (!confirmed) return;
+      blogService.setToken(user.token);
+      await blogService.remove(blog.id);
+      showNotification(`${blog.title} was removed.`);
+      setBlogs(blogs.filter((e) => (e.id !== blog.id ? e : "")));
+    } catch (exception) {
+      showNotification(exception.response.data.error, "errorMessage");
+    }
+  };
+
   const showBlogs = () => (
     <>
       <h1>Blogs</h1>
@@ -126,9 +145,8 @@ const App = () => {
           <Blog
             key={blog.id}
             blog={blog}
-            setBlogs={setBlogs}
-            blogs={blogs}
-            showNotification={showNotification}
+            giveLike={() => handleGiveLike(blog)}
+            deletePost={() => handleDeletePost(blog)}
             user={user}
           />
         ))}

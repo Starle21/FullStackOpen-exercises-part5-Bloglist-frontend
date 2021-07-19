@@ -19,7 +19,7 @@ const NewBlog = ({ createNewBlog }) => {
   return (
     <div>
       <h3>create new blog</h3>
-      <form onSubmit={addNewBlog}>
+      <form onSubmit={addNewBlog} className="submitNewBlog">
         <div>
           title:{" "}
           <input

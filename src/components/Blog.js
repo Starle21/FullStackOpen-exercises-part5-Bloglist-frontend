@@ -1,34 +1,15 @@
 import React, { useState } from "react";
-import blogService from "../services/blogs";
 import PropTypes from "prop-types";
 
-const Blog = ({ blog, setBlogs, blogs, showNotification, user }) => {
+const Blog = ({ blog, user, giveLike, deletePost }) => {
   const [visible, setVisible] = useState(false);
   const hiddenDefault = { display: visible ? "" : "none" };
   const toggleVisibility = () => {
     setVisible(!visible);
   };
-  const handleIncreaseLikes = async () => {
-    const copyBlog = { ...blog, likes: blog.likes + 1 };
-    const blogUpdated = await blogService.update(blog.id, copyBlog);
-    setBlogs(blogs.map((e) => (e.id !== blogUpdated.id ? e : blogUpdated)));
-  };
 
-  const handleDelete = async () => {
-    try {
-      const confirmed = window.confirm(`Are you sure to delete ${blog.title}?`);
-      if (!confirmed) return;
-      blogService.setToken(user.token);
-      await blogService.remove(blog.id);
-      showNotification(`${blog.title} was removed.`);
-      setBlogs(blogs.filter((e) => (e.id !== blog.id ? e : "")));
-    } catch (exception) {
-      showNotification(exception.response.data.error, "errorMessage");
-    }
-  };
-  //blog.user.id = user.id
   const showDeleteButton = () => (
-    <button onClick={handleDelete}>delete blog</button>
+    <button onClick={deletePost}>delete blog</button>
   );
 
   return (
@@ -40,7 +21,7 @@ const Blog = ({ blog, setBlogs, blogs, showNotification, user }) => {
       <div style={hiddenDefault} className="details">
         {blog.url}
         <br />
-        likes {blog.likes} <button onClick={handleIncreaseLikes}>like</button>
+        likes {blog.likes} <button onClick={giveLike}>like</button>
         <br />
         {blog.user.name}
         <br />
@@ -52,9 +33,8 @@ const Blog = ({ blog, setBlogs, blogs, showNotification, user }) => {
 
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
-  setBlogs: PropTypes.func.isRequired,
-  blogs: PropTypes.array.isRequired,
-  showNotification: PropTypes.func.isRequired,
+  giveLike: PropTypes.func.isRequired,
+  deletePost: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
 };
 
