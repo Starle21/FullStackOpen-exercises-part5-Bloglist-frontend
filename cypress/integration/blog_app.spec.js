@@ -3,12 +3,12 @@ describe("Blog app", function () {
   beforeEach(function () {
     //empty the database
     cy.request("POST", "http://localhost:3003/api/testing/reset");
-    const user = {
-      name: "starryNight",
+    cy.addUser({
       username: "starryNight",
+      name: "starryNight",
       password: "password",
-    };
-    cy.request("POST", "http://localhost:3003/api/users/", user);
+    });
+    cy.addUser({ username: "starDay", name: "starDay", password: "password" });
     cy.visit("http://localhost:3000");
   });
 
@@ -58,22 +58,45 @@ describe("Blog app", function () {
       cy.get("#createBlog-button").click();
       cy.contains("E2E with cypress seems ok");
     });
-    describe("after a blog is created", function () {
+    describe("after a few blog posts have been created", function () {
       //
       beforeEach(function () {
-        //
         cy.createBlog({
           title: "Do you wanna give like?",
           author: "Likeme",
           url: "like.com",
         });
+        cy.createBlog({
+          title: "The other blog",
+          author: "The Other",
+          url: "other.org",
+        });
       });
 
-      it("user can like a blog", function () {
+      it("a user can like a blog", function () {
         //find view, click
-        cy.get("#toggleDetails-button").click();
-        cy.get("#like-button").click();
-        cy.get(".details").should("contain", "1");
+        cy.get("#toggleDetails-button").first().click();
+        cy.get("#like-button").first().click();
+        cy.get(".details").first().should("contain", "1");
+      });
+
+      it("a user can delete a blog they created", function () {
+        cy.get("#toggleDetails-button").first().click();
+        cy.get(".details")
+          .first()
+          .should("contain", "starryNight")
+          .and("contain", "delete blog");
+        cy.get(".details").find("#delete-button").first().click();
+        cy.get("html").should("contain", "Do you wanna give like? was removed");
+      });
+
+      it("users cannot delete other people's blogs", function () {
+        cy.login({ username: "starDay", password: "password" });
+        cy.get("#toggleDetails-button").first().click();
+        cy.get(".details")
+          .first()
+          .should("contain", "starryNight")
+          .and("not.contain", "delete blog");
       });
     });
   });

@@ -9,7 +9,9 @@ const Blog = ({ blog, user, giveLike, deletePost }) => {
   };
 
   const showDeleteButton = () => (
-    <button onClick={deletePost}>delete blog</button>
+    <button id="delete-button" onClick={deletePost}>
+      delete blog
+    </button>
   );
 
   return (

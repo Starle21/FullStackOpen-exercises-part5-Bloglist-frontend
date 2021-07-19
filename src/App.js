@@ -142,7 +142,10 @@ const App = () => {
       <h1>Blogs</h1>
       <Notification notification={notification} />
       <p>
-        {user.name} logged in <button onClick={handleLogout}>logout</button>
+        {user.name} logged in{" "}
+        <button id="logout-button" onClick={handleLogout}>
+          logout
+        </button>
       </p>
       <div>
         {sortedBlogs.map((blog) => (
