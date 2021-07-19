@@ -16,6 +16,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "check": "cross-env CI=true npm test",
+    "cypress:open": "cypress open",
     "coverage": "cross-env CI=true npm test -- --coverage",
     "eject": "react-scripts eject",
     "eslint": "eslint ."
@@ -42,6 +43,7 @@
   "devDependencies": {
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
-    "cross-env": "^7.0.3"
+    "cross-env": "^7.0.3",
+    "cypress": "^7.7.0"
   }
 }
