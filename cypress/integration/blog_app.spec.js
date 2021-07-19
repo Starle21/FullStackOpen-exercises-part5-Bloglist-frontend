@@ -58,5 +58,23 @@ describe("Blog app", function () {
       cy.get("#createBlog-button").click();
       cy.contains("E2E with cypress seems ok");
     });
+    describe("after a blog is created", function () {
+      //
+      beforeEach(function () {
+        //
+        cy.createBlog({
+          title: "Do you wanna give like?",
+          author: "Likeme",
+          url: "like.com",
+        });
+      });
+
+      it("user can like a blog", function () {
+        //find view, click
+        cy.get("#toggleDetails-button").click();
+        cy.get("#like-button").click();
+        cy.get(".details").should("contain", "1");
+      });
+    });
   });
 });

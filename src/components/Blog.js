@@ -16,12 +16,17 @@ const Blog = ({ blog, user, giveLike, deletePost }) => {
     <div className="blog">
       {/* when details hidden */}
       {blog.title} {blog.author}{" "}
-      <button onClick={toggleVisibility}>{visible ? "hide" : "view"}</button>
+      <button id="toggleDetails-button" onClick={toggleVisibility}>
+        {visible ? "hide" : "view"}
+      </button>
       {/*  when details visible*/}
       <div style={hiddenDefault} className="details">
         {blog.url}
         <br />
-        likes {blog.likes} <button onClick={giveLike}>like</button>
+        likes {blog.likes}{" "}
+        <button id="like-button" onClick={giveLike}>
+          like
+        </button>
         <br />
         {blog.user.name}
         <br />
