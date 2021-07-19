@@ -3,6 +3,12 @@ describe("Blog app", function () {
   beforeEach(function () {
     //empty the database
     cy.request("POST", "http://localhost:3003/api/testing/reset");
+    const user = {
+      name: "starryNight",
+      username: "starryNight",
+      password: "password",
+    };
+    cy.request("POST", "http://localhost:3003/api/users/", user);
     cy.visit("http://localhost:3000");
   });
 
@@ -10,16 +16,7 @@ describe("Blog app", function () {
     cy.contains("username");
   });
 
-  describe("when logging in", function () {
-    beforeEach(function () {
-      const user = {
-        name: "starryNight",
-        username: "starryNight",
-        password: "password",
-      };
-      cy.request("POST", "http://localhost:3003/api/users/", user);
-    });
-
+  describe("while logging in", function () {
     it("user can log in", function () {
       //get the input
       //fill in input
@@ -31,7 +28,7 @@ describe("Blog app", function () {
       //notification about success login shown
       cy.contains("starryNight logged in");
     });
-    it("user cannot log in with wrong credentials", function () {
+    it("user cannot log in with wrong password", function () {
       //get the input
       //fill in input
       cy.get("#username").type("starryNight");
@@ -44,6 +41,22 @@ describe("Blog app", function () {
         .should("contain", "invalid username or password")
         .and("have.css", "color", "rgb(255, 0, 0)")
         .and("have.css", "border-style", "solid");
+    });
+  });
+
+  describe("when logged in", function () {
+    beforeEach(function () {
+      // log in user
+      cy.login({ username: "starryNight", password: "password" });
+    });
+
+    it("A blog can be created", function () {
+      cy.contains("create new blog").click();
+      cy.get("#title").type("E2E with cypress seems ok");
+      cy.get("#author").type("cypress");
+      cy.get("#url").type("www.cypress.com");
+      cy.get("#createBlog-button").click();
+      cy.contains("E2E with cypress seems ok");
     });
   });
 });
