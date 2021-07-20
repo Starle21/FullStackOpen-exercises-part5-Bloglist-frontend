@@ -158,10 +158,11 @@ const App = () => {
           />
         ))}
       </div>
-      <br />
-      <Togglable buttonLabel="create new blog" ref={showBlogsRef}>
-        <NewBlog createNewBlog={createNewBlog} />
-      </Togglable>
+      <div>
+        <Togglable buttonLabel="create new blog" ref={showBlogsRef}>
+          <NewBlog createNewBlog={createNewBlog} />
+        </Togglable>
+      </div>
     </>
   );
 

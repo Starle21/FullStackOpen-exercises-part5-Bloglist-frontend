@@ -23,16 +23,17 @@ const Blog = ({ blog, user, giveLike, deletePost }) => {
       </button>
       {/*  when details visible*/}
       <div style={hiddenDefault} className="details">
-        {blog.url}
-        <br />
-        likes {blog.likes}{" "}
-        <button id="like-button" onClick={giveLike}>
-          like
-        </button>
-        <br />
-        {blog.user.name}
-        <br />
-        {blog.user.username === user.username ? showDeleteButton() : ""}
+        <div>{blog.url}</div>
+        <div>
+          <span className="blog-likes">likes {blog.likes} </span>
+          <button id="like-button" onClick={giveLike}>
+            like
+          </button>
+        </div>
+        <div>{blog.user.name}</div>
+        <div>
+          {blog.user.username === user.username ? showDeleteButton() : ""}
+        </div>
       </div>
     </div>
   );

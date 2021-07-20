@@ -98,6 +98,28 @@ describe("Blog app", function () {
           .should("contain", "starryNight")
           .and("not.contain", "delete blog");
       });
+      it("blogs are sorted by the most likes first", function () {
+        cy.createBlog({
+          title: "With likes",
+          author: "Liking",
+          url: "heart.com",
+          likes: 10,
+        });
+        cy.createBlog({
+          title: "With Many likes",
+          author: "Liking",
+          url: "heart.com",
+          likes: 100,
+        });
+
+        cy.get(".blog-likes").should(($likes) => {
+          //
+          const likesNumber = $likes.map((i, el) => {
+            return Cypress.$(el).text().match(/\d+/);
+          });
+          expect(likesNumber.get()).to.deep.eq(["100", "10", "0", "0"]);
+        });
+      });
     });
   });
 });
